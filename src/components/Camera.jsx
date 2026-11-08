@@ -46,6 +46,7 @@ export default function Camera({
             ref={videoRef}
             autoPlay
             playsInline
+            webkit-playsinline="true"
             muted
             style={{
               filter,

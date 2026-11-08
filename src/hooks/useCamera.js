@@ -29,7 +29,10 @@ export default function useCamera() {
         }
         currentStream = s
         if (videoRef.current) {
+          videoRef.current.setAttribute('playsinline', 'true')
+          videoRef.current.setAttribute('webkit-playsinline', 'true')
           videoRef.current.srcObject = s
+          videoRef.current.play().catch(() => {})
         }
       })
       .catch(() => {

@@ -15,6 +15,18 @@ function getAudioContext() {
   return audioCtx
 }
 
+// Ensure audio context is unlocked by direct user touch on iOS Safari
+export function unlockAudio() {
+  try {
+    const ctx = getAudioContext()
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume()
+    }
+  } catch (e) {
+    console.warn('Audio unlock error:', e)
+  }
+}
+
 export function playShutterSound() {
   try {
     const ctx = getAudioContext()
@@ -116,4 +128,3 @@ export function playPopSound() {
     console.warn('Audio playback error:', e)
   }
 }
-

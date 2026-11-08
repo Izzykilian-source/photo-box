@@ -10,7 +10,7 @@ import StickerToolbar from './components/StickerToolbar'
 import Sparkles from './components/Sparkles'
 import CropModal from './components/CropModal'
 import { themes, layouts, patterns, filters } from './themes'
-import { playShutterSound, playBeepSound, playPopSound } from './utils/audio'
+import { playShutterSound, playBeepSound, playPopSound, unlockAudio } from './utils/audio'
 
 const wait = ms => new Promise(r => setTimeout(r, ms))
 
@@ -82,6 +82,7 @@ export default function App() {
   // Camera Capture Sequence
   const startCameraCapture = async () => {
     if (busy || error) return
+    unlockAudio()
     setBusy(true)
     setPhotos([])
     const totalShots = layout.shots
@@ -129,7 +130,7 @@ export default function App() {
     setPlacedStickers(prev => prev.filter(s => s.instanceId !== instanceId))
   }
 
-  // Download Photostrip as High-Res PNG
+  // Download Photostrip as High-Res PNG (Supports iOS / Android Native Share Sheet)
   const downloadStrip = async () => {
     if (!stripRef.current || photos.length === 0) return
     setIsExporting(true)
@@ -137,12 +138,43 @@ export default function App() {
 
     try {
       await wait(100)
+      const blob = await toBlob(stripRef.current, {
+        pixelRatio: 2.5,
+        cacheBust: true,
+      })
+      if (!blob) throw new Error('Blob generation failed')
+
+      const fileName = `photobox-${themeKey}-${Date.now()}.png`
+      const file = new File([blob], fileName, { type: 'image/png' })
+
+      // On iOS / Android: trigger native Share Sheet (Allows direct "Save to Photos" / "Simpan Gambar")
+      if (
+        navigator.canShare &&
+        navigator.canShare({ files: [file] }) &&
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      ) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Cute Photobox ♡',
+          })
+          setIsExporting(false)
+          return
+        } catch (shareErr) {
+          if (shareErr.name === 'AbortError') {
+            setIsExporting(false)
+            return
+          }
+        }
+      }
+
+      // Standard desktop download link fallback
       const dataUrl = await toPng(stripRef.current, {
-        pixelRatio: 3,
+        pixelRatio: 2.5,
         cacheBust: true,
       })
       const link = document.createElement('a')
-      link.download = `photobox-${themeKey}-${Date.now()}.png`
+      link.download = fileName
       link.href = dataUrl
       link.click()
     } catch (err) {

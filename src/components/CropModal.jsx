@@ -176,7 +176,7 @@ export default function CropModal({
                 width: '100%',
                 maxHeight: '340px',
               }}
-              className="relative overflow-hidden cursor-grab active:cursor-grabbing flex items-center justify-center"
+              className="relative overflow-hidden cursor-grab active:cursor-grabbing flex items-center justify-center touch-none"
             >
               <img
                 ref={imgRef}
