@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Pacifico&family=Patrick+Hand&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=VT323&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-hand: 'Patrick Hand', cursive;
+  --font-script: 'Pacifico', cursive;
+  --font-cute: 'Gaegu', cursive;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'VT323', monospace;
+  --color-cream: #fff8f0;
+  --color-blush: #ffd6e8;
+  --color-peach: #ffe0cc;
+  --color-lilac: #e4d9ff;
+  --color-mint: #d4f5e6;
+  --color-cocoa: #43334d;
+}
+
+body {
+  @apply bg-cream text-cocoa font-sans min-h-screen selection:bg-pink-200 selection:text-pink-900;
+  background-color: #fff9f5;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 214, 232, 0.45) 0, transparent 40%),
+    radial-gradient(circle at 88% 70%, rgba(228, 217, 255, 0.45) 0, transparent 40%),
+    radial-gradient(circle at 65% 15%, rgba(212, 245, 230, 0.4) 0, transparent 35%),
+    radial-gradient(circle at 30% 85%, rgba(255, 224, 204, 0.4) 0, transparent 35%);
+  background-attachment: fixed;
+}
+
+/* Washi Tape Accent */
+.washi-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 90px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-left: 3px dashed rgba(200, 200, 200, 0.5);
+  border-right: 3px dashed rgba(200, 200, 200, 0.5);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Patterns for Photostrips */
+.pattern-dots {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+.pattern-checkers {
+  background-image:
+    linear-gradient(45deg, rgba(0, 0, 0, 0.04) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(0, 0, 0, 0.04) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(0, 0, 0, 0.04) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(0, 0, 0, 0.04) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+}
+
+.pattern-hearts {
+  background-image: radial-gradient(circle at center, rgba(230, 73, 128, 0.08) 2px, transparent 2px);
+  background-size: 18px 18px;
+}
+
+.pattern-film {
+  position: relative;
+}
+.pattern-film::before,
+.pattern-film::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  width: 8px;
+  background-image: radial-gradient(circle, #3d2d1f 3px, transparent 3px);
+  background-size: 8px 18px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.pattern-film::before {
+  left: 3px;
+}
+.pattern-film::after {
+  right: 3px;
+}
+
+/* Custom scrollbar for cute stickers drawer */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(224, 82, 124, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(224, 82, 124, 0.6);
+}
