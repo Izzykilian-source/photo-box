@@ -158,6 +158,35 @@ button, a, input, select, label {
   pointer-events: none;
 }
 
+/* 6. Digicam 2000s Center Flash & Grain */
+.effect-ccd-flash {
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 250, 240, 0.15) 35%, transparent 75%),
+    radial-gradient(circle at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.22) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ccdNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ccdNoise)' opacity='0.14'/%3E%3C/svg%3E");
+  mix-blend-mode: screen, multiply, overlay;
+  pointer-events: none;
+}
+
+/* 7. Teal & Orange Cinematic Grading */
+.effect-teal-orange {
+  background:
+    linear-gradient(180deg, rgba(255, 120, 30, 0.22) 0%, transparent 40%, rgba(0, 150, 180, 0.26) 100%),
+    radial-gradient(circle at 75% 20%, rgba(255, 170, 60, 0.28) 0%, transparent 50%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* 8. Y2K Cyber Glitch & Scanlines */
+.effect-y2k-cyber {
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 255, 230, 0.08) 0px, rgba(0, 255, 230, 0.08) 1px, transparent 1px, transparent 3px),
+    linear-gradient(90deg, rgba(255, 0, 128, 0.12) 0%, transparent 50%, rgba(0, 220, 255, 0.12) 100%);
+  mix-blend-mode: color-dodge;
+  pointer-events: none;
+}
+
+
 /* Custom scrollbar for cute stickers & controls drawer */
 ::-webkit-scrollbar {
   height: 6px;

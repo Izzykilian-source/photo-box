@@ -102,27 +102,33 @@ export const patterns = {
   film: { name: 'Film Sprockets' },
 }
 
-// 14 aesthetic filters
+// Aesthetic Filters (termasuk Digicam CCD, Teal & Orange, Korean Pastel, Ash Muted, Vintage Karma, Y2K)
 export const filters = {
   'Normal (Jernih)': 'none',
-  '🌸 Pastel Bloom': 'brightness(1.08) contrast(0.95) saturate(1.18) hue-rotate(-5deg)',
+  '📸 2000s Digicam CCD': 'contrast(1.22) brightness(1.12) saturate(1.35) sepia(0.12) hue-rotate(-8deg)',
+  '🎬 Teal & Orange': 'contrast(1.28) saturate(1.45) sepia(0.22) hue-rotate(-22deg) brightness(1.02)',
+  '🌸 Korean Pastel Cream': 'brightness(1.12) contrast(0.92) saturate(1.16) hue-rotate(-6deg)',
+  '🌫️ Ash Muted Portrait': 'saturate(0.58) contrast(1.24) brightness(0.95) hue-rotate(185deg) sepia(0.08)',
+  '🎞️ Vintage Karma 70s': 'sepia(0.48) contrast(0.95) brightness(1.06) saturate(1.22) hue-rotate(8deg)',
+  '🪩 Y2K Webcore Glitch': 'contrast(1.32) saturate(1.7) hue-rotate(165deg) brightness(1.06)',
   '🍓 Strawberry Pop': 'saturate(1.42) hue-rotate(-12deg) contrast(1.05) brightness(1.04)',
   '🍵 Matcha Latte': 'sepia(0.2) saturate(1.22) hue-rotate(25deg) brightness(1.03) contrast(0.98)',
   '🎞️ Disposable 35mm': 'sepia(0.38) contrast(1.18) saturate(1.25) brightness(0.96)',
   '☕ Cafe Sepia': 'sepia(0.55) contrast(1.1) saturate(1.1) brightness(0.98)',
   '🤍 Haru B&W': 'grayscale(1) contrast(1.3) brightness(1.03)',
-  '🪩 Cyber Y2K': 'contrast(1.15) saturate(1.48) hue-rotate(170deg) brightness(1.02)',
   '🫧 Ethereal Fairy': 'brightness(1.12) contrast(0.92) saturate(1.25) blur(0.25px)',
   "🧸 Kodak Gold '94": 'sepia(0.25) saturate(1.38) hue-rotate(8deg) contrast(1.12) brightness(1.02)',
   '🎀 Coquette Doll': 'brightness(1.06) contrast(0.98) saturate(1.2) hue-rotate(-10deg)',
   '☀️ Golden Hour': 'sepia(0.32) saturate(1.52) hue-rotate(12deg) brightness(1.08)',
-  '🫐 Midnight Blue': 'contrast(1.12) saturate(0.9) hue-rotate(190deg) brightness(0.98)',
   '🍬 Cotton Candy': 'brightness(1.08) contrast(0.96) saturate(1.35) hue-rotate(-20deg)',
 }
 
 // Visual Overlays / Effects
 export const aestheticEffects = {
   none: { name: '🚫 Tanpa Efek', class: '' },
+  ccd_flash: { name: '📸 Flash Digicam CCD', class: 'effect-ccd-flash' },
+  teal_orange: { name: '🎬 Teal & Orange Glow', class: 'effect-teal-orange' },
+  y2k_cyber: { name: '🪩 Y2K Cyber Glitch', class: 'effect-y2k-cyber' },
   sparkles: { name: '✨ Sparkle Shimmer', class: 'effect-sparkles' },
   heart_bokeh: { name: '💖 Heart Bokeh', class: 'effect-heart-bokeh' },
   light_leak: { name: '☀️ Light Leak 90s', class: 'effect-light-leak' },

@@ -26,6 +26,7 @@ const PhotoStrip = forwardRef(function PhotoStrip(
     },
     effectClass = '',
     onOpenCrop,
+    showWatermark = false,
   },
   ref
 ) {
@@ -198,6 +199,18 @@ const PhotoStrip = forwardRef(function PhotoStrip(
               </div>
               <span className="text-[8px] font-mono tracking-widest mt-0.5 opacity-60">
                 NO. 2026-LIFE-CUTS-77
+              </span>
+            </div>
+          )}
+
+          {/* Freemium Watermark (removable with VIP) */}
+          {showWatermark && (
+            <div className="mt-2.5 pt-1.5 border-t border-dashed border-black/15 flex flex-col items-center select-none">
+              <span className="text-[9px] font-cute font-bold tracking-wider opacity-75">
+                📸 Cute Photobox • Free Tier
+              </span>
+              <span className="text-[7.5px] font-mono tracking-tight opacity-55">
+                upgrade to VIP for HD & no watermark
               </span>
             </div>
           )}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useCallback } from 'react'
 import { toPng, toBlob } from 'html-to-image'
 import { motion } from 'framer-motion'
 import useCamera from './hooks/useCamera'
@@ -9,6 +9,8 @@ import PhotoStrip from './components/PhotoStrip'
 import StickerToolbar from './components/StickerToolbar'
 import Sparkles from './components/Sparkles'
 import CropModal from './components/CropModal'
+import VipModal from './components/VipModal'
+import VipBadge from './components/VipBadge'
 import {
   themes,
   layouts,
@@ -16,6 +18,12 @@ import {
   filters,
   aestheticEffects,
 } from './themes'
+import {
+  isVip as checkIsVip,
+  FREE_FILTER_KEYS,
+  FREE_EFFECT_KEYS,
+  FREE_LAYOUT_KEYS,
+} from './utils/premium'
 import { playShutterSound, playBeepSound, playPopSound, unlockAudio } from './utils/audio'
 
 const wait = ms => new Promise(r => setTimeout(r, ms))
@@ -45,7 +53,7 @@ export default function App() {
   const [themeKey, setThemeKey] = useState('strawberry')
   const [layoutKey, setLayoutKey] = useState('strip4')
   const [patternKey, setPatternKey] = useState('dots')
-  const [filterKey, setFilterKey] = useState('🌸 Pastel Bloom')
+  const [filterKey, setFilterKey] = useState('🌸 Korean Pastel Cream')
   const [effectKey, setEffectKey] = useState('none')
   const [stripTitle, setStripTitle] = useState('Cute Photobox ♡')
   const [dateText, setDateText] = useState('2026.11.09')
@@ -64,6 +72,14 @@ export default function App() {
     cornerRadius: 4, // 0 | 6 | 14
     showDateStamp: true,
   })
+
+  // ─── VIP / Freemium State ───
+  const [vipStatus, setVipStatus] = useState(() => checkIsVip())
+  const [vipModalOpen, setVipModalOpen] = useState(false)
+
+  const refreshVip = useCallback(() => {
+    setVipStatus(checkIsVip())
+  }, [])
 
   const theme = themes[themeKey]
   const layout = layouts[layoutKey]
@@ -173,16 +189,37 @@ export default function App() {
     })
   }
 
+  // ─── VIP-gated helpers ───
+
+  // Check if a filter is accessible
+  const isFilterLocked = fName => !vipStatus && !FREE_FILTER_KEYS.includes(fName)
+  // Check if an effect is accessible
+  const isEffectLocked = k => !vipStatus && !FREE_EFFECT_KEYS.includes(k)
+  // Check if a layout is accessible
+  const isLayoutLocked = k => !vipStatus && !FREE_LAYOUT_KEYS.includes(k)
+
+  // Attempt to select a gated item; if locked, open VIP modal instead
+  const handleGatedSelect = (isLocked, setter, value) => {
+    if (isLocked) {
+      setVipModalOpen(true)
+      return
+    }
+    setter(value)
+    if (soundEnabled) playPopSound()
+  }
+
   // Download Photostrip as High-Res PNG (Supports iOS / Android Native Share Sheet)
   const downloadStrip = async () => {
     if (!stripRef.current || photos.length === 0) return
     setIsExporting(true)
     if (soundEnabled) playPopSound()
 
+    const pixelRatio = vipStatus ? 2.5 : 1.5
+
     try {
       await wait(100)
       const blob = await toBlob(stripRef.current, {
-        pixelRatio: 2.5,
+        pixelRatio,
         cacheBust: true,
       })
       if (!blob) throw new Error('Blob generation failed')
@@ -213,7 +250,7 @@ export default function App() {
 
       // Standard desktop download link fallback
       const dataUrl = await toPng(stripRef.current, {
-        pixelRatio: 2.5,
+        pixelRatio,
         cacheBust: true,
       })
       const link = document.createElement('a')
@@ -228,8 +265,12 @@ export default function App() {
     }
   }
 
-  // Copy Photostrip Directly to Clipboard
+  // Copy Photostrip Directly to Clipboard (VIP only)
   const copyToClipboard = async () => {
+    if (!vipStatus) {
+      setVipModalOpen(true)
+      return
+    }
     if (!stripRef.current || photos.length === 0) return
     setIsExporting(true)
     if (soundEnabled) playPopSound()
@@ -279,6 +320,16 @@ export default function App() {
         />
       )}
 
+      {/* VIP Purchase Modal */}
+      <VipModal
+        isOpen={vipModalOpen}
+        onClose={() => {
+          setVipModalOpen(false)
+          refreshVip()
+        }}
+        onActivated={refreshVip}
+      />
+
       <main className="max-w-4xl mx-auto px-3.5 sm:px-4 pt-6 text-center relative z-10">
         {/* Header Section */}
         <header className="mb-5">
@@ -286,15 +337,18 @@ export default function App() {
             <span className="text-xs bg-pink-100/90 text-pink-700 px-3 py-1 rounded-full font-cute font-bold shadow-xs">
               ✨ KOREAN PHOTOBOOTH STUDIO
             </span>
-            <button
-              onClick={() => {
-                setSoundEnabled(!soundEnabled)
-                if (!soundEnabled) playPopSound()
-              }}
-              className="text-xs bg-white/80 hover:bg-white text-stone-700 px-3 py-1 rounded-full shadow-xs border border-pink-200 flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <span>{soundEnabled ? '🔊 Suara Aktif' : '🔇 Mute'}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <VipBadge isVip={vipStatus} onOpenVip={() => setVipModalOpen(true)} />
+              <button
+                onClick={() => {
+                  setSoundEnabled(!soundEnabled)
+                  if (!soundEnabled) playPopSound()
+                }}
+                className="text-xs bg-white/80 hover:bg-white text-stone-700 px-3 py-1 rounded-full shadow-xs border border-pink-200 flex items-center gap-1.5 transition cursor-pointer"
+              >
+                <span>{soundEnabled ? '🔊' : '🔇'}</span>
+              </button>
+            </div>
           </div>
 
           <motion.h1
@@ -436,37 +490,45 @@ export default function App() {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs sm:text-sm font-cute font-bold text-pink-950 flex items-center gap-1.5">
-                    <span>🌸</span> Pilihan 14 Filter Estetik (Korea & Vintage Film)
+                    <span>🌸</span> Pilihan 17 Filter Estetik (Digicam CCD, Korean Pastel, Y2K & Vintage)
                   </label>
                   <span className="text-[11px] text-pink-600 font-cute">
                     Aktif: {filterKey}
                   </span>
                 </div>
 
+                {!vipStatus && (
+                  <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 mb-2 font-cute">
+                    🔒 Kamu bisa pakai 3 filter gratis. <button type="button" onClick={() => setVipModalOpen(true)} className="underline font-bold cursor-pointer">Upgrade VIP</button> untuk buka semua 17 filter & efek spesial!
+                  </p>
+                )}
+
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {Object.keys(filters).map(fName => {
                     const isSelected = filterKey === fName
+                    const locked = isFilterLocked(fName)
                     return (
                       <button
                         key={fName}
                         type="button"
-                        onClick={() => {
-                          setFilterKey(fName)
-                          if (soundEnabled) playPopSound()
-                        }}
-                        className={`p-2.5 rounded-2xl text-xs font-cute font-bold text-left border transition cursor-pointer flex flex-col justify-between ${
+                        onClick={() =>
+                          handleGatedSelect(locked, setFilterKey, fName)
+                        }
+                        className={`p-2.5 rounded-2xl text-xs font-cute font-bold text-left border transition cursor-pointer flex flex-col justify-between relative ${
                           isSelected
                             ? 'bg-pink-500 text-white border-pink-500 shadow-sm'
-                            : 'bg-pink-50/50 hover:bg-pink-100/70 border-pink-200/80 text-stone-700'
+                            : locked
+                              ? 'bg-stone-100/60 border-stone-200/80 text-stone-400'
+                              : 'bg-pink-50/50 hover:bg-pink-100/70 border-pink-200/80 text-stone-700'
                         }`}
                       >
                         <span className="line-clamp-1">{fName}</span>
                         <span
                           className={`text-[10px] mt-1 font-mono ${
-                            isSelected ? 'text-pink-100' : 'text-stone-400'
+                            isSelected ? 'text-pink-100' : locked ? 'text-stone-400' : 'text-stone-400'
                           }`}
                         >
-                          {isSelected ? '✓ Dipakai' : 'Pilih'}
+                          {locked ? '🔒 VIP' : isSelected ? '✓ Dipakai' : 'Pilih'}
                         </span>
                       </button>
                     )
@@ -479,25 +541,35 @@ export default function App() {
                 <label className="text-xs sm:text-sm font-cute font-bold text-pink-950 flex items-center gap-1.5 mb-2">
                   <span>✨</span> Efek-Efek Visual Lucu & Menawan
                 </label>
+
+                {!vipStatus && (
+                  <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1.5 mb-2 font-cute">
+                    🔒 Efek visual spesial hanya untuk VIP. <button type="button" onClick={() => setVipModalOpen(true)} className="underline font-bold cursor-pointer">Buka sekarang!</button>
+                  </p>
+                )}
+
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {Object.entries(aestheticEffects).map(([k, ef]) => {
                     const isSelected = effectKey === k
+                    const locked = isEffectLocked(k)
                     return (
                       <button
                         key={k}
                         type="button"
-                        onClick={() => {
-                          setEffectKey(k)
-                          if (soundEnabled) playPopSound()
-                        }}
+                        onClick={() =>
+                          handleGatedSelect(locked, setEffectKey, k)
+                        }
                         className={`p-2.5 rounded-2xl text-xs font-cute font-bold text-left border transition cursor-pointer flex items-center justify-between ${
                           isSelected
                             ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
-                            : 'bg-purple-50/50 hover:bg-purple-100/70 border-purple-200/80 text-stone-700'
+                            : locked
+                              ? 'bg-stone-100/60 border-stone-200/80 text-stone-400'
+                              : 'bg-purple-50/50 hover:bg-purple-100/70 border-purple-200/80 text-stone-700'
                         }`}
                       >
                         <span className="line-clamp-1">{ef.name}</span>
-                        {isSelected && <span className="text-xs">✓</span>}
+                        {locked && <span className="text-xs">🔒</span>}
+                        {isSelected && !locked && <span className="text-xs">✓</span>}
                       </button>
                     )
                   })}
@@ -528,22 +600,28 @@ export default function App() {
                   </select>
                 </div>
 
-                {/* Layout Selector */}
+                {/* Layout Selector (VIP-gated for non-free layouts) */}
                 <div>
                   <label className="block text-xs font-cute font-bold text-stone-700 mb-1">
-                    📐 Format Layout
+                    📐 Format Layout {!vipStatus && <span className="text-[10px] text-amber-600">(🔒 VIP untuk lebih)</span>}
                   </label>
                   <select
                     value={layoutKey}
                     onChange={e => {
-                      setLayoutKey(e.target.value)
+                      const val = e.target.value
+                      if (isLayoutLocked(val)) {
+                        setVipModalOpen(true)
+                        e.target.value = layoutKey // revert
+                        return
+                      }
+                      setLayoutKey(val)
                       if (soundEnabled) playPopSound()
                     }}
                     className="w-full rounded-2xl px-3 py-2 bg-pink-50/80 border border-pink-200 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-pink-300 outline-none shadow-xs cursor-pointer"
                   >
                     {Object.entries(layouts).map(([k, l]) => (
                       <option key={k} value={k}>
-                        {l.name}
+                        {l.name} {isLayoutLocked(k) ? '🔒' : ''}
                       </option>
                     ))}
                   </select>
@@ -608,9 +686,26 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 3: PENYESUAIAN & TONE (EDITAN SLIDER) */}
+          {/* TAB 3: PENYESUAIAN & TONE (EDITAN SLIDER) — VIP-gated */}
           {studioTab === 'adjust' && (
-            <div className="space-y-4">
+            <div className="space-y-4 relative">
+              {!vipStatus && (
+                <div className="absolute inset-0 z-20 bg-white/70 backdrop-blur-[2px] rounded-2xl flex flex-col items-center justify-center text-center p-6">
+                  <span className="text-5xl mb-3 select-none">👑</span>
+                  <h3 className="font-script text-2xl text-pink-900 mb-2">Fitur VIP</h3>
+                  <p className="font-cute text-stone-600 text-sm mb-4 max-w-xs">
+                    Pengaturan kecerahan, kontras, saturasi, dan tone foto hanya tersedia untuk VIP.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setVipModalOpen(true)}
+                    className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white font-cute font-bold text-sm shadow-md hover:shadow-lg transition cursor-pointer"
+                  >
+                    Upgrade ke VIP · Rp 5rb 🎀
+                  </button>
+                </div>
+              )}
+
               <div className="flex items-center justify-between pb-2 border-b border-pink-100">
                 <span className="text-xs sm:text-sm font-cute font-bold text-pink-950">
                   🎛️ Pengaturan Pencahayaan & Tone Foto
@@ -744,15 +839,19 @@ export default function App() {
                   <input
                     type="checkbox"
                     checked={adjustments.showDateStamp}
-                    onChange={e =>
+                    onChange={e => {
+                      if (!vipStatus) {
+                        setVipModalOpen(true)
+                        return
+                      }
                       setAdjustments(prev => ({
                         ...prev,
                         showDateStamp: e.target.checked,
                       }))
-                    }
+                    }}
                     className="accent-orange-500 rounded"
                   />
-                  <span>⏰ Stempel Tanggal Oranye 90s</span>
+                  <span>⏰ Stempel Tanggal Oranye 90s {!vipStatus && '🔒'}</span>
                 </label>
               </div>
             </div>
@@ -765,6 +864,8 @@ export default function App() {
                 onAddSticker={handleAddSticker}
                 placedStickers={placedStickers}
                 onClearStickers={() => setPlacedStickers([])}
+                isVip={vipStatus}
+                onOpenVip={() => setVipModalOpen(true)}
               />
             </div>
           )}
@@ -819,6 +920,7 @@ export default function App() {
                   adjustments={adjustments}
                   effectClass={effectClass}
                   onOpenCrop={handleOpenCrop}
+                  showWatermark={!vipStatus}
                 />
               </div>
 
@@ -831,7 +933,13 @@ export default function App() {
                   disabled={isExporting}
                   className="rounded-full px-6 sm:px-8 py-3.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-cute font-bold text-lg sm:text-xl shadow-[0_5px_0_#9333ea] hover:shadow-[0_3px_0_#9333ea] hover:translate-y-[2px] active:translate-y-[5px] active:shadow-none cursor-pointer flex items-center gap-2"
                 >
-                  <span>{isExporting ? 'Menyimpan...' : 'Unduh Photostrip (HD) 💾'}</span>
+                  <span>
+                    {isExporting
+                      ? 'Menyimpan...'
+                      : vipStatus
+                        ? 'Unduh Photostrip (Ultra-HD) 💾'
+                        : 'Unduh Photostrip 💾'}
+                  </span>
                 </motion.button>
 
                 <motion.button
@@ -839,10 +947,14 @@ export default function App() {
                   whileTap={{ scale: 0.96 }}
                   onClick={copyToClipboard}
                   disabled={isExporting}
-                  className="rounded-full px-4 sm:px-5 py-3 bg-white hover:bg-pink-50 text-stone-700 font-cute font-bold text-sm sm:text-base shadow-xs border border-pink-200 transition flex items-center gap-1.5 cursor-pointer"
-                  title="Salin langsung ke clipboard untuk dipaste di WhatsApp / Instagram"
+                  className={`rounded-full px-4 sm:px-5 py-3 font-cute font-bold text-sm sm:text-base shadow-xs border transition flex items-center gap-1.5 cursor-pointer ${
+                    vipStatus
+                      ? 'bg-white hover:bg-pink-50 text-stone-700 border-pink-200'
+                      : 'bg-stone-100 text-stone-400 border-stone-200'
+                  }`}
+                  title={vipStatus ? 'Salin langsung ke clipboard' : 'Fitur VIP — klik untuk upgrade'}
                 >
-                  <span>📋 {copiedToast ? 'Tersalin! ✅' : 'Salin Gambar'}</span>
+                  <span>{copiedToast ? '✅ Tersalin!' : vipStatus ? '📋 Salin Gambar' : '🔒 Salin (VIP)'}</span>
                 </motion.button>
 
                 <motion.button
@@ -867,6 +979,17 @@ export default function App() {
                   🔄 Reset
                 </motion.button>
               </div>
+
+              {/* Free tier download notice */}
+              {!vipStatus && (
+                <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2 mt-3 font-cute max-w-sm">
+                  📌 Download gratis dalam kualitas standar dengan watermark.{' '}
+                  <button type="button" onClick={() => setVipModalOpen(true)} className="underline font-bold cursor-pointer">
+                    Upgrade VIP
+                  </button>{' '}
+                  untuk Ultra-HD tanpa watermark!
+                </p>
+              )}
 
               {copiedToast && (
                 <p className="text-xs text-green-700 font-cute font-bold mt-2 animate-bounce">
@@ -901,6 +1024,23 @@ export default function App() {
           </section>
         )}
       </main>
+
+      {/* Floating VIP FAB on mobile (only for free users) */}
+      {!vipStatus && (
+        <motion.button
+          type="button"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 2, type: 'spring' }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setVipModalOpen(true)}
+          className="fixed bottom-6 right-4 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-pink-500 text-white shadow-xl flex items-center justify-center text-2xl cursor-pointer sm:hidden border-2 border-white/50"
+          title="Jadi VIP"
+        >
+          👑
+        </motion.button>
+      )}
     </div>
   )
 }
