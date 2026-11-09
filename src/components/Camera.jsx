@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
+import VisualEffectOverlay from './VisualEffectOverlay'
 
 export default function Camera({
   videoRef,
@@ -8,6 +9,7 @@ export default function Camera({
   error,
   facingMode = 'user',
   onFlipCamera,
+  effectClass = '',
 }) {
   return (
     <div className="relative mx-auto w-full max-w-md rounded-[2.5rem] border-[10px] border-white/90 bg-stone-900 shadow-2xl overflow-hidden ring-4 ring-pink-200/50">
@@ -54,6 +56,9 @@ export default function Camera({
             }}
             className="w-full h-full object-cover block"
           />
+
+          {/* Aesthetic Visual Effect Overlay on Live Camera */}
+          <VisualEffectOverlay effectClass={effectClass} />
 
           {/* Viewfinder crosshairs */}
           <div className="absolute inset-4 pointer-events-none border border-white/20 rounded-2xl flex items-center justify-center">

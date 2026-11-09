@@ -110,8 +110,8 @@ button, a, input, select, label {
 /* 1. Light Leak / Retro Sun Flare */
 .effect-light-leak {
   background:
-    linear-gradient(135deg, rgba(255, 130, 45, 0.38) 0%, rgba(255, 60, 120, 0.22) 32%, transparent 68%),
-    radial-gradient(circle at 95% 8%, rgba(255, 235, 120, 0.42) 0%, transparent 45%);
+    radial-gradient(circle at 100% 0%, rgba(255, 110, 40, 0.65) 0%, rgba(255, 195, 60, 0.45) 25%, rgba(255, 60, 140, 0.25) 50%, transparent 75%),
+    linear-gradient(135deg, rgba(255, 90, 30, 0.35) 0%, transparent 60%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
@@ -119,16 +119,19 @@ button, a, input, select, label {
 /* 2. Heart Bokeh */
 .effect-heart-bokeh {
   background:
-    radial-gradient(circle at 20% 25%, rgba(255, 105, 180, 0.32) 0%, transparent 35%),
-    radial-gradient(circle at 80% 65%, rgba(255, 182, 193, 0.38) 0%, transparent 40%),
-    radial-gradient(circle at 45% 85%, rgba(255, 220, 240, 0.3) 0%, transparent 28%);
+    radial-gradient(circle at 20% 25%, rgba(255, 105, 180, 0.45) 0%, transparent 35%),
+    radial-gradient(circle at 80% 65%, rgba(255, 20, 147, 0.45) 0%, transparent 40%),
+    radial-gradient(circle at 50% 85%, rgba(255, 182, 193, 0.4) 0%, transparent 30%),
+    linear-gradient(180deg, rgba(255, 192, 203, 0.15) 0%, rgba(255, 105, 180, 0.2) 100%);
   mix-blend-mode: screen;
   pointer-events: none;
 }
 
 /* 3. 35mm Film Grain */
 .effect-film-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.18'/%3E%3C/svg%3E");
+  background-image:
+    radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.35) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.32'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
   pointer-events: none;
 }
@@ -136,13 +139,13 @@ button, a, input, select, label {
 /* 4. Rainbow Prism */
 .effect-rainbow-prism {
   background: linear-gradient(
-    60deg,
-    rgba(255, 90, 90, 0.18) 0%,
-    rgba(255, 180, 70, 0.18) 20%,
-    rgba(255, 240, 80, 0.18) 40%,
-    rgba(90, 220, 130, 0.18) 60%,
-    rgba(90, 160, 255, 0.18) 80%,
-    rgba(210, 110, 255, 0.18) 100%
+    125deg,
+    rgba(255, 0, 0, 0.25) 0%,
+    rgba(255, 165, 0, 0.25) 18%,
+    rgba(255, 255, 0, 0.25) 36%,
+    rgba(0, 255, 128, 0.25) 54%,
+    rgba(0, 180, 255, 0.25) 72%,
+    rgba(180, 0, 255, 0.25) 100%
   );
   mix-blend-mode: screen;
   pointer-events: none;
@@ -151,41 +154,50 @@ button, a, input, select, label {
 /* 5. Fairy Dust / Soft Glow */
 .effect-fairy-dust {
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 70%),
-    radial-gradient(circle at 15% 80%, rgba(220, 245, 230, 0.28) 0%, transparent 35%),
-    radial-gradient(circle at 85% 20%, rgba(255, 215, 240, 0.28) 0%, transparent 35%);
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.35) 0%, transparent 65%),
+    radial-gradient(circle at 15% 80%, rgba(180, 245, 220, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(255, 180, 230, 0.45) 0%, transparent 40%),
+    linear-gradient(135deg, rgba(220, 190, 255, 0.2) 0%, rgba(255, 230, 240, 0.15) 100%);
   mix-blend-mode: soft-light;
   pointer-events: none;
 }
 
-/* 6. Digicam 2000s Center Flash & Grain */
+/* 6. Digicam 2000s Center Flash & Vignette */
 .effect-ccd-flash {
   background:
-    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 250, 240, 0.15) 35%, transparent 75%),
-    radial-gradient(circle at 50% 50%, transparent 60%, rgba(0, 0, 0, 0.22) 100%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ccdNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ccdNoise)' opacity='0.14'/%3E%3C/svg%3E");
-  mix-blend-mode: screen, multiply, overlay;
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 250, 230, 0.22) 32%, transparent 65%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(20, 15, 30, 0.45) 100%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='ccdNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ccdNoise)' opacity='0.22'/%3E%3C/svg%3E");
+  mix-blend-mode: hard-light;
   pointer-events: none;
 }
 
 /* 7. Teal & Orange Cinematic Grading */
 .effect-teal-orange {
   background:
-    linear-gradient(180deg, rgba(255, 120, 30, 0.22) 0%, transparent 40%, rgba(0, 150, 180, 0.26) 100%),
-    radial-gradient(circle at 75% 20%, rgba(255, 170, 60, 0.28) 0%, transparent 50%);
-  mix-blend-mode: overlay;
+    linear-gradient(180deg, rgba(255, 140, 40, 0.38) 0%, rgba(255, 160, 60, 0.15) 45%, rgba(0, 160, 190, 0.38) 100%),
+    radial-gradient(circle at 75% 25%, rgba(255, 180, 50, 0.35) 0%, transparent 55%);
+  mix-blend-mode: color;
   pointer-events: none;
 }
 
 /* 8. Y2K Cyber Glitch & Scanlines */
 .effect-y2k-cyber {
   background:
-    repeating-linear-gradient(0deg, rgba(0, 255, 230, 0.08) 0px, rgba(0, 255, 230, 0.08) 1px, transparent 1px, transparent 3px),
-    linear-gradient(90deg, rgba(255, 0, 128, 0.12) 0%, transparent 50%, rgba(0, 220, 255, 0.12) 100%);
-  mix-blend-mode: color-dodge;
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.25) 0px, rgba(0, 0, 0, 0.25) 2px, transparent 2px, transparent 4px),
+    linear-gradient(90deg, rgba(255, 0, 128, 0.25) 0%, transparent 40%, rgba(0, 240, 255, 0.25) 100%);
+  mix-blend-mode: screen;
   pointer-events: none;
 }
 
+/* 9. Sparkle Shimmer Ambient Glow */
+.effect-sparkles {
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 245, 180, 0.3) 0%, transparent 30%),
+    radial-gradient(circle at 80% 75%, rgba(255, 215, 240, 0.3) 0%, transparent 35%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
 
 /* Custom scrollbar for cute stickers & controls drawer */
 ::-webkit-scrollbar {

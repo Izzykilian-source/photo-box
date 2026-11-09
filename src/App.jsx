@@ -407,6 +407,7 @@ export default function App() {
                 error={error}
                 facingMode={facingMode}
                 onFlipCamera={flipCamera}
+                effectClass={effectClass}
               />
 
               {/* Camera Controls & Timer Selector */}
@@ -450,6 +451,7 @@ export default function App() {
               maxShots={layout.shots}
               filter={combinedFilter}
               onOpenCrop={handleOpenCrop}
+              effectClass={effectClass}
             />
           )}
         </section>

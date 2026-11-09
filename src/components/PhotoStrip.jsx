@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import { motion } from 'framer-motion'
+import VisualEffectOverlay from './VisualEffectOverlay'
 
 const PhotoStrip = forwardRef(function PhotoStrip(
   {
@@ -113,19 +114,7 @@ const PhotoStrip = forwardRef(function PhotoStrip(
                     />
 
                     {/* Aesthetic Visual Effect Overlay */}
-                    {effectClass && (
-                      <div className={`absolute inset-0 pointer-events-none ${effectClass}`} />
-                    )}
-
-                    {/* Sparkles effect overlay */}
-                    {effectClass === 'effect-sparkles' && (
-                      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-                        <span className="absolute top-2 left-2 text-xs select-none drop-shadow-sm">✨</span>
-                        <span className="absolute bottom-3 right-10 text-[10px] select-none drop-shadow-sm">⭐</span>
-                        <span className="absolute top-1/2 right-2 text-[11px] select-none drop-shadow-sm">✨</span>
-                        <span className="absolute bottom-2 left-4 text-[9px] select-none drop-shadow-sm">✦</span>
-                      </div>
-                    )}
+                    <VisualEffectOverlay effectClass={effectClass} />
 
                     {/* Retro Camera Date Stamp (Orange LED 90s Camera) */}
                     {adjustments?.showDateStamp && (

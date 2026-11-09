@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import VisualEffectOverlay from './VisualEffectOverlay'
 
 export default function Polaroid({
   src,
@@ -43,9 +44,7 @@ export default function Polaroid({
         />
 
         {/* Effect overlay */}
-        {effectClass && (
-          <div className={`absolute inset-0 pointer-events-none ${effectClass}`} />
-        )}
+        <VisualEffectOverlay effectClass={effectClass} />
 
         <span className="absolute bottom-1 right-1 text-[8px] font-mono text-white/50 bg-black/40 px-1 rounded-xs z-10">
           #{index + 1}

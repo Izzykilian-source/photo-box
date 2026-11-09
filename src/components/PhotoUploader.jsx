@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { playPopSound } from '../utils/audio'
+import VisualEffectOverlay from './VisualEffectOverlay'
 
 // Preset sample photos in case user wants to test quickly
 const SAMPLE_PHOTOS = [
@@ -49,6 +50,7 @@ export default function PhotoUploader({
   maxShots = 4,
   filter = 'none',
   onOpenCrop,
+  effectClass = '',
 }) {
   const fileInputRef = useRef(null)
   const [replaceSlot, setReplaceSlot] = useState(null)
@@ -224,6 +226,7 @@ export default function PhotoUploader({
                       style={{ filter }}
                       className="w-full h-full object-cover"
                     />
+                    <VisualEffectOverlay effectClass={effectClass} />
                     {/* Hover Overlay with Crop & Change buttons */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 p-1 text-white">
                       {onOpenCrop && (
