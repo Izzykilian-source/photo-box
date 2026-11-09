@@ -9,13 +9,22 @@ const PhotoStrip = forwardRef(function PhotoStrip(
     pattern = 'dots',
     title = 'Cute Photobox ♡',
     setTitle,
-    dateText = '2026.11.08',
+    dateText = '2026.11.09',
     setDateText,
     showTape = true,
     showBarcode = true,
     placedStickers = [],
     onRemoveSticker,
     filter = 'none',
+    adjustments = {
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      warmth: 0,
+      cornerRadius: 4,
+      showDateStamp: true,
+    },
+    effectClass = '',
     onOpenCrop,
   },
   ref
@@ -38,6 +47,21 @@ const PhotoStrip = forwardRef(function PhotoStrip(
       default:
         return ''
     }
+  }
+
+  // Combine selected aesthetic filter with fine-tuned adjustment sliders
+  const combinedFilter = [
+    filter !== 'none' ? filter : '',
+    adjustments?.brightness !== 100 ? `brightness(${adjustments.brightness}%)` : '',
+    adjustments?.contrast !== 100 ? `contrast(${adjustments.contrast}%)` : '',
+    adjustments?.saturation !== 100 ? `saturate(${adjustments.saturation}%)` : '',
+    adjustments?.warmth > 0 ? `sepia(${adjustments.warmth}%)` : '',
+  ]
+    .filter(Boolean)
+    .join(' ') || 'none'
+
+  const cornerRadiusStyle = {
+    borderRadius: `${adjustments?.cornerRadius ?? 4}px`,
   }
 
   return (
@@ -73,7 +97,8 @@ const PhotoStrip = forwardRef(function PhotoStrip(
                     onOpenCrop(i, photoSrc)
                   }
                 }}
-                className={`relative overflow-hidden bg-stone-900 shadow-xs border border-black/10 rounded-sm group ${
+                style={cornerRadiusStyle}
+                className={`relative overflow-hidden bg-stone-900 shadow-xs border border-black/10 group ${
                   photoSrc && onOpenCrop ? 'cursor-pointer' : ''
                 } ${isGrid ? 'aspect-square' : 'aspect-[4/3]'}`}
               >
@@ -82,12 +107,35 @@ const PhotoStrip = forwardRef(function PhotoStrip(
                     <img
                       src={photoSrc}
                       alt={`Foto ${i + 1}`}
-                      style={{ filter }}
+                      style={{ filter: combinedFilter }}
                       className="w-full h-full object-cover block pointer-events-none"
                     />
+
+                    {/* Aesthetic Visual Effect Overlay */}
+                    {effectClass && (
+                      <div className={`absolute inset-0 pointer-events-none ${effectClass}`} />
+                    )}
+
+                    {/* Sparkles effect overlay */}
+                    {effectClass === 'effect-sparkles' && (
+                      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+                        <span className="absolute top-2 left-2 text-xs select-none drop-shadow-sm">✨</span>
+                        <span className="absolute bottom-3 right-10 text-[10px] select-none drop-shadow-sm">⭐</span>
+                        <span className="absolute top-1/2 right-2 text-[11px] select-none drop-shadow-sm">✨</span>
+                        <span className="absolute bottom-2 left-4 text-[9px] select-none drop-shadow-sm">✦</span>
+                      </div>
+                    )}
+
+                    {/* Retro Camera Date Stamp (Orange LED 90s Camera) */}
+                    {adjustments?.showDateStamp && (
+                      <span className="absolute bottom-1.5 right-2 font-mono text-[10px] font-bold tracking-widest text-[#ff6600] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)] select-none pointer-events-none z-10">
+                        '{dateText ? dateText.slice(2).replace(/[.-]/g, ' ') : '26 11 09'}
+                      </span>
+                    )}
+
                     {/* Hover crop indicator */}
                     {onOpenCrop && (
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-20">
                         <span className="bg-pink-500/90 text-white text-[10px] font-cute font-bold px-2.5 py-1 rounded-full shadow-xs flex items-center gap-1">
                           ✂️ Atur Crop
                         </span>
@@ -101,7 +149,7 @@ const PhotoStrip = forwardRef(function PhotoStrip(
                   </div>
                 )}
                 {/* Subtle vintage film frame number */}
-                <span className="absolute bottom-1 right-1.5 text-[8px] font-mono tracking-tighter text-white/70 bg-black/40 px-1 rounded-xs pointer-events-none">
+                <span className="absolute bottom-1 left-1.5 text-[8px] font-mono tracking-tighter text-white/70 bg-black/40 px-1 rounded-xs pointer-events-none z-10">
                   0{i + 1}A
                 </span>
               </div>

@@ -102,15 +102,33 @@ export const patterns = {
   film: { name: 'Film Sprockets' },
 }
 
+// 14 aesthetic filters
 export const filters = {
-  Normal: 'none',
-  'Soft Glow': 'brightness(1.05) contrast(0.96) saturate(1.15)',
-  'Korean Pink': 'saturate(1.35) hue-rotate(-8deg) contrast(1.03) brightness(1.04)',
-  '90s Film': 'sepia(0.35) contrast(1.15) saturate(1.2) brightness(0.98)',
-  'Warm Honey': 'sepia(0.2) saturate(1.45) hue-rotate(8deg) brightness(1.05)',
-  'Haru B&W': 'grayscale(1) contrast(1.25) brightness(1.02)',
-  'Dreamy': 'brightness(1.1) contrast(0.9) saturate(1.3) blur(0.25px)',
-  'Cyber Neon': 'contrast(1.2) saturate(1.6) hue-rotate(180deg)',
+  'Normal (Jernih)': 'none',
+  '🌸 Pastel Bloom': 'brightness(1.08) contrast(0.95) saturate(1.18) hue-rotate(-5deg)',
+  '🍓 Strawberry Pop': 'saturate(1.42) hue-rotate(-12deg) contrast(1.05) brightness(1.04)',
+  '🍵 Matcha Latte': 'sepia(0.2) saturate(1.22) hue-rotate(25deg) brightness(1.03) contrast(0.98)',
+  '🎞️ Disposable 35mm': 'sepia(0.38) contrast(1.18) saturate(1.25) brightness(0.96)',
+  '☕ Cafe Sepia': 'sepia(0.55) contrast(1.1) saturate(1.1) brightness(0.98)',
+  '🤍 Haru B&W': 'grayscale(1) contrast(1.3) brightness(1.03)',
+  '🪩 Cyber Y2K': 'contrast(1.15) saturate(1.48) hue-rotate(170deg) brightness(1.02)',
+  '🫧 Ethereal Fairy': 'brightness(1.12) contrast(0.92) saturate(1.25) blur(0.25px)',
+  "🧸 Kodak Gold '94": 'sepia(0.25) saturate(1.38) hue-rotate(8deg) contrast(1.12) brightness(1.02)',
+  '🎀 Coquette Doll': 'brightness(1.06) contrast(0.98) saturate(1.2) hue-rotate(-10deg)',
+  '☀️ Golden Hour': 'sepia(0.32) saturate(1.52) hue-rotate(12deg) brightness(1.08)',
+  '🫐 Midnight Blue': 'contrast(1.12) saturate(0.9) hue-rotate(190deg) brightness(0.98)',
+  '🍬 Cotton Candy': 'brightness(1.08) contrast(0.96) saturate(1.35) hue-rotate(-20deg)',
+}
+
+// Visual Overlays / Effects
+export const aestheticEffects = {
+  none: { name: '🚫 Tanpa Efek', class: '' },
+  sparkles: { name: '✨ Sparkle Shimmer', class: 'effect-sparkles' },
+  heart_bokeh: { name: '💖 Heart Bokeh', class: 'effect-heart-bokeh' },
+  light_leak: { name: '☀️ Light Leak 90s', class: 'effect-light-leak' },
+  film_grain: { name: '🎞️ 35mm Grain', class: 'effect-film-grain' },
+  rainbow_prism: { name: '🌈 Rainbow Prism', class: 'effect-rainbow-prism' },
+  fairy_dust: { name: '🫧 Fairy Dust', class: 'effect-fairy-dust' },
 }
 
 export const stickerLibrary = [
@@ -131,6 +149,10 @@ export const stickerLibrary = [
   { id: 'clover', content: '🍀', type: 'emoji' },
   { id: 'cake', content: '🍰', type: 'emoji' },
   { id: 'camera', content: '📷', type: 'emoji' },
+  { id: 'butterfly', content: '🦋', type: 'emoji' },
+  { id: 'lollipop', content: '🍭', type: 'emoji' },
+  { id: 'sparkling_heart', content: '💗', type: 'emoji' },
+  { id: 'sparkler', content: '🪄', type: 'emoji' },
 
   // Text Badges & Stamps
   { id: 'txt-life4cuts', content: '인생네컷', type: 'badge', bg: '#ffe4ec', text: '#e64980' },
@@ -140,7 +162,9 @@ export const stickerLibrary = [
   { id: 'txt-memories', content: 'MEMORIES', type: 'badge', bg: '#f3e8ff', text: '#7e22ce' },
   { id: 'txt-mood', content: 'MOOD', type: 'badge', bg: '#dcfce7', text: '#15803d' },
   { id: 'txt-daebak', content: '대박! 💖', type: 'badge', bg: '#fee2e2', text: '#dc2626' },
-  { id: 'txt-vintage-date', content: "'26 11 08", type: 'badge', bg: '#1c1917', text: '#f97316', font: 'font-mono' },
+  { id: 'txt-vintage-date', content: "'26 11 09", type: 'badge', bg: '#1c1917', text: '#f97316', font: 'font-mono' },
+  { id: 'txt-forever', content: 'FOREVER 🌷', type: 'badge', bg: '#fce7f3', text: '#be185d' },
+  { id: 'txt-pure', content: 'PURE LOVE', type: 'badge', bg: '#e0e7ff', text: '#4338ca' },
 ]
 
 export const defaultCaptions = [

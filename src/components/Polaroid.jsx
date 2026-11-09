@@ -1,7 +1,14 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
-export default function Polaroid({ src, index, theme, sticker = '🎀', filter = 'none' }) {
+export default function Polaroid({
+  src,
+  index,
+  theme,
+  sticker = '🎀',
+  filter = 'none',
+  effectClass = '',
+}) {
   const [caption, setCaption] = useState(
     ['bestie ✨', 'so cute 🍓', 'smile! 🌷', 'mood 💖', 'favorite moment 💌'][index % 5]
   )
@@ -16,7 +23,7 @@ export default function Polaroid({ src, index, theme, sticker = '🎀', filter =
       drag
       dragSnapToOrigin
       style={{ backgroundColor: theme.frame }}
-      className="relative w-60 p-3.5 pb-14 shadow-2xl rounded-sm cursor-grab active:cursor-grabbing border border-black/5 select-none"
+      className="relative w-60 p-3.5 pb-14 shadow-2xl rounded-sm cursor-grab active:cursor-grabbing border border-black/5 select-none touch-none"
     >
       {/* Tape accent */}
       <div className="washi-tape" style={{ width: '70px', height: '20px', top: '-10px' }} />
@@ -34,7 +41,13 @@ export default function Polaroid({ src, index, theme, sticker = '🎀', filter =
           style={{ filter }}
           className="w-full h-full object-cover block pointer-events-none"
         />
-        <span className="absolute bottom-1 right-1 text-[8px] font-mono text-white/50 bg-black/40 px-1 rounded-xs">
+
+        {/* Effect overlay */}
+        {effectClass && (
+          <div className={`absolute inset-0 pointer-events-none ${effectClass}`} />
+        )}
+
+        <span className="absolute bottom-1 right-1 text-[8px] font-mono text-white/50 bg-black/40 px-1 rounded-xs z-10">
           #{index + 1}
         </span>
       </div>
